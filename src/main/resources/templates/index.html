@@ -3,7 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Менеджер задач (Spring)</title>
-    <style> body { font-family: Arial; margin: 40px; } .task-item { border: 1px solid #ccc; padding: 10px; margin: 10px 0; } .error { color: red; } </style>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        .task-item { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+        .error { color: red; }
+        .delete-form { display: inline; }
+        .delete-button {
+            background: none;
+            border: none;
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 0;
+            font: inherit;
+        }
+    </style>
 </head>
 <body>
 <h1>Список задач (Spring Boot)</h1>
@@ -26,7 +40,18 @@
 <div th:each="task : ${tasks}" class="task-item">
     <strong th:text="${task.title}">Название</strong> — <span th:text="${task.description}">Описание</span>
     <small th:text="${#temporals.format(task.createdAt, 'dd.MM.yyyy HH:mm')}">дата</small>
-    <a th:href="@{/delete/{id}(id=${task.id})}" onclick="return confirm('Удалить?')">Удалить</a>
+    <!-- Форма для удаления с методом POST и скрытым полем _method -->
+    <form th:action="@{/delete/{id}(id=${task.id})}" method="post" class="delete-form">
+        <input type="hidden" name="_method" value="delete" />
+        <button type="submit" class="delete-button" onclick="return confirm('Удалить?')">Удалить</button>
+    </form>
 </div>
+
+<div style="float: right;">
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Выйти</button>
+    </form>
+</div>
+
 </body>
 </html>
